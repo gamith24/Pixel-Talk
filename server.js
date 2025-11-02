@@ -1,11 +1,19 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+const dotenv = require("dotenv").config();;
+
+const handleSocketConnection = require("./socket/socket");
+const mongoose = require("./config/db");
 const cors = require("cors");
 
+const POST = process.env.PORT || 3000;
 const app = express();
-let strokes = [];
-const messages_ = [];
+
+
+mongoose.connection.once("open", () => {
+  console.log("Connected to MongoDB database");
+});
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -19,31 +27,9 @@ app.use(
   })
 );
 app.use(express.static("public"));
-io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
-  strokes.forEach((stroke) => socket.emit(stroke.event, stroke.data));
-  messages_.forEach((msg) => socket.emit(msg.event, msg.message));
-  socket.on("draw", (data) => {
-    strokes.push({ event: "draw", data });
-    socket.broadcast.emit("draw", data);
-  });
-  socket.on("start", (data) => {
-    strokes.push({ event: "start", data });
-    socket.broadcast.emit("start", data);
-  });
-  socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
-  });
-  socket.on("clear", () => {
-    strokes = [];
-    socket.broadcast.emit("cleared", true);
-  });
-  socket.on("chat-message", (msg) => {
-    messages_.push({ event: "chat-message", message: msg });
-    socket.broadcast.emit("chat-message", msg);
-  });
-});
+
+io.on("connection", async socket => await (handleSocketConnection(socket,io)));
 
 server.listen(3000, () => {
-  console.log(`server running on http://192.168.10.69:${3000}`);
+  console.log(`server running on http//localhost:${3000}`);
 });

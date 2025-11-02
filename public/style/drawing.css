@@ -125,3 +125,8 @@
         opacity: 1;
     }
 }
+
+.sender>div {
+  align-self: last baseline;
+  background-color: rgb(30, 32, 32);
+}

@@ -1,4 +1,4 @@
-const socket = io("http://192.168.10.69:3000");
+const socket = io("http://localhost:3000");
 const colorpicker = document.getElementById("color-picker");
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
@@ -98,7 +98,7 @@ window.addEventListener("keydown", (e) => {
 socket.on("chat-message", (msg) => {
   const msgBox = document.createElement("div");
   msgBox.innerHTML = `
-    <div class="msg-div self">
+    <div class="msg-div self sender">
       <div class="user-msg">
       ${msg}
       </div>

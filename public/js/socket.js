@@ -1,4 +1,4 @@
-const socket = io("http://localhost:3000");
+const socket = io("https://pixel-talk-phi.vercel.app/");
 const colorpicker = document.getElementById("color-picker");
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
